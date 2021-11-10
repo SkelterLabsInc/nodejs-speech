@@ -8,6 +8,18 @@ to use AIQ.TALK STT API.
 This repository contains simple example CLI programs that recognizes the given
 `resources/.wav` audio file.
 
+## Install Google Cloud SDK
+
+See [Installing Cloud SDK](https://cloud.google.com/sdk/docs/install) to install
+Google Cloud SDK, and finalize installing process. After installation, make sure
+you've followed the steps with a Google account. This step is required only for
+resolving dependencies; not for actually calling an API on Google Cloud.
+
+```shell
+$ gcloud init
+$ gcloud auth application-default login
+```
+
 ## Before you begin
 
 Before running the samples, make sure you've followed the steps.
