@@ -9,7 +9,10 @@ This repository contains simple example CLI programs that recognizes the given
 `resources/.wav` audio file.
 
 ## Install Google Cloud SDK
-
+As this repo uses
+[Google Cloud Speech Node.js Client](https://github.com/googleapis/nodejs-speech)
+for compatibility issue, users need to follow Google Cloud SDK's authentication
+method.
 See [Installing Cloud SDK](https://cloud.google.com/sdk/docs/install) to install
 Google Cloud SDK, and finalize installing process. After installation, make sure
 you've followed the steps with a Google account. This step is required only for
