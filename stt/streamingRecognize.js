@@ -1,6 +1,7 @@
 const speech = require('@google-cloud/speech')
 const { credentials } = require('@grpc/grpc-js')
 const av = require('av')
+const { GoogleAuth, grpc } = require('google-gax')
 const pcmConvert = require('pcm-convert')
 const { hideBin } = require('yargs/helpers')
 const yargs = require('yargs/yargs')
@@ -24,9 +25,16 @@ async function main (argv) {
     port: argv.port,
     projectId: 'aiq'
   }
-  if (argv.insecure) {
-    clientConfig.sslCreds = credentials.createInsecure()
-  }
+
+  // Build GoogleAuth credential object
+  // from the suggestion https://github.com/googleapis/nodejs-speech/issues/19#issuecomment-648343356
+  const googleAuth = new GoogleAuth()
+  const authClient = googleAuth.fromAPIKey(argv.apiKey)
+  clientConfig.sslCreds = grpc.credentials.combineChannelCredentials(
+    argv.insecure ? credentials.createInsecure() : credentials.createSsl(),
+    grpc.credentials.createFromGoogleCredential(authClient)
+  )
+
   // Recognize audio
   const client = new speech.SpeechClient(clientConfig)
   client.initialize()
