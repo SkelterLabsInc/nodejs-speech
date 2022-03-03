@@ -28,12 +28,24 @@ of av module.
 ...
 ```
 
+## Build proto files
+
+This is an optional step for running pure gRPC scripts.
+```shell
+$ cd ./proto && make # Make sure grpc_tools is installed on local node_modules
+```
+
 Get your AIQ API key from the
 [AIQ Console](https://aiq.skelterlabs.com/console).
 
 ## Samples
 
 NOTE. We support mono audio only now.
+
+
+For pure gRPC usage, use `pureRecognize.js`, `pureStreamingRecognize.js`
+instead of `recognize.js`, `streamingRecognize`, respectively.
+However, note that pure gRPC scripts have empty results issue, and will be fixed later.
 
 ### Synchronously transcribe a local file
 
