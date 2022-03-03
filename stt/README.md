@@ -8,21 +8,6 @@ to use AIQ.TALK STT API.
 This repository contains simple example CLI programs that recognizes the given
 `resources/.wav` audio file.
 
-## Install Google Cloud SDK
-As this repo uses
-[Google Cloud Speech Node.js Client](https://github.com/googleapis/nodejs-speech)
-for compatibility issue, users need to follow Google Cloud SDK's authentication
-method.
-See [Installing Cloud SDK](https://cloud.google.com/sdk/docs/install) to install
-Google Cloud SDK, and finalize installing process. After installation, make sure
-you've followed the steps with a Google account. This step is required only for
-resolving dependencies; not for actually calling an API on Google Cloud.
-
-```shell
-$ gcloud init
-$ gcloud auth application-default login
-```
-
 ## Before you begin
 
 Before running the samples, make sure you've followed the steps.
@@ -43,12 +28,24 @@ of av module.
 ...
 ```
 
+## Build proto files
+
+This is an optional step for running pure gRPC scripts.
+```shell
+$ cd ./proto && make # Make sure grpc_tools is installed on local node_modules
+```
+
 Get your AIQ API key from the
 [AIQ Console](https://aiq.skelterlabs.com/console).
 
 ## Samples
 
 NOTE. We support mono audio only now.
+
+
+For pure gRPC usage, use `pureRecognize.js`, `pureStreamingRecognize.js`
+instead of `recognize.js`, `streamingRecognize`, respectively.
+However, note that pure gRPC scripts have empty results issue, and will be fixed later.
 
 ### Synchronously transcribe a local file
 

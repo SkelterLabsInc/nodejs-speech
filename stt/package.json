@@ -12,6 +12,8 @@
     "@google-cloud/speech": "^4.4.0",
     "@grpc/grpc-js": "^1.2.0",
     "av": "^0.4.9",
+    "google-protobuf": "^3.19.4",
+    "grpc-tools": "1.11.2",
     "pcm-convert": "^1.6.5",
     "yargs": "^16.2.0"
   }
