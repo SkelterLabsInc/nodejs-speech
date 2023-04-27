@@ -1,10 +1,5 @@
 # AIQ.TALK STT Node.js Example
 
-The AIQ.TALK STT API is mostly compatible with the Google Cloud Speech API,
-so you can use
-[Google Cloud Speech Node.js Client](https://github.com/googleapis/nodejs-speech)
-to use AIQ.TALK STT API.
-
 This repository contains simple example CLI programs that recognizes the given
 `resources/.wav` audio file.
 
@@ -32,7 +27,7 @@ of av module.
 
 This is an optional step for running pure gRPC scripts.
 ```shell
-$ cd ./proto && make # Make sure grpc_tools is installed on local node_modules
+$ cd ./proto && make # Make sure grpc-tools is installed on local node_modules
 ```
 
 Get your AIQ API key from the
@@ -41,11 +36,6 @@ Get your AIQ API key from the
 ## Samples
 
 NOTE. We support mono audio only now.
-
-
-For pure gRPC usage, use `pureRecognize.js`, `pureStreamingRecognize.js`
-instead of `recognize.js`, `streamingRecognize`, respectively.
-However, note that pure gRPC scripts have empty results issue, and will be fixed later.
 
 ### Synchronously transcribe a local file
 

@@ -1,14 +1,22 @@
 const fs = require('fs')
+const util = require('util')
 
-const speech = require('@google-cloud/speech')
-const { credentials } = require('@grpc/grpc-js')
+const { credentials, Metadata } = require('@grpc/grpc-js')
 const av = require('av')
-const { GoogleAuth, grpc } = require('google-gax')
 const pcmConvert = require('pcm-convert')
 const { hideBin } = require('yargs/helpers')
 const yargs = require('yargs/yargs')
 
-async function main (argv) {
+const { SpeechClient } = require('./google/speech/v1/cloud_speech_grpc_pb')
+const {
+  RecognitionConfig,
+  RecognitionAudio,
+  RecognizeRequest,
+  SpeechContext
+} = require('./google/speech/v1/cloud_speech_pb')
+const ru = require('./recognizeUtil.js')
+
+async function main(argv) {
   // Read audio file
   const audioData = fs.readFileSync(argv.path)
   const audio = av.Asset.fromBuffer(audioData)
@@ -24,48 +32,36 @@ async function main (argv) {
     sampleRate *= audio.format.channelsPerFrame
   }
 
-  // Recognize audio
-  const clientConfig = {
-    apiEndpoint: argv.host,
-    port: argv.port,
-    projectId: 'aiq'
-  }
+  // Prepare authorization
+  const sslCreds = argv.insecure ? credentials.createInsecure() : credentials.createSsl()
 
-  // Build GoogleAuth credential object
-  // from the suggestion https://github.com/googleapis/nodejs-speech/issues/19#issuecomment-648343356
-  const googleAuth = new GoogleAuth()
-  const authClient = googleAuth.fromAPIKey(argv.apiKey)
-  clientConfig.sslCreds = grpc.credentials.combineChannelCredentials(
-    argv.insecure ? credentials.createInsecure() : credentials.createSsl(),
-    grpc.credentials.createFromGoogleCredential(authClient)
-  )
+  // Build request
+  const speechContext = argv.speechContextPhrases.map((phrase) => new SpeechContext(phrase))
+  const recognitionConfig = new RecognitionConfig()
+    .setEncoding(RecognitionConfig.AudioEncoding.LINEAR16)
+    .setSampleRateHertz(sampleRate)
+    .setLanguageCode('ko-KR')
+    .setSpeechContextsList(speechContext)
+    .setEnableWordTimeOffsets(argv.enableWordTimeOffsets)
+  const recognitionAudio = new RecognitionAudio().setContent(buffer.toString('base64'))
+  const recognizeRequest = new RecognizeRequest()
+    .setConfig(recognitionConfig)
+    .setAudio(recognitionAudio)
 
-  const client = new speech.SpeechClient(clientConfig)
-  const [response] = await client.recognize(
-    {
-      config: {
-        encoding: 'LINEAR16',
-        sampleRateHertz: sampleRate,
-        languageCode: 'ko-KR'
-      },
-      audio: {
-        content: buffer.toString('base64')
-      }
-    },
-    {
-      otherArgs: {
-        headers: {
-          'x-api-key': argv.apiKey
-        }
-      }
-    }
-  )
+  // Create gRPC client
+  const client = new SpeechClient(`${argv.host}:${argv.port}`, sslCreds)
 
-  // Print transcription
-  const transcription = response.results
-    .map((result) => result.alternatives[0].transcript)
+  // Add api key header
+  const metadata = new Metadata()
+  metadata.add('x-api-key', argv.apiKey)
+
+  // Send request for recognizing audio
+  const recognizeAsync = util.promisify(client.recognize).bind(client)
+  const response = await recognizeAsync(recognizeRequest, metadata)
+  const transcription = response
+    .toObject()
+    .resultsList.map((result) => ru.convertResultToFormatted(result))
     .join('\n')
-
   /* eslint-disable no-console */
   console.log(`Transcription: ${transcription}`)
   /* eslint-enable no-console */
@@ -96,6 +92,14 @@ yargs(hideBin(process.argv))
   })
   .demandOption('api-key')
   .option('insecure', {
+    type: 'boolean',
+    default: false
+  })
+  .option('speech-context-phrases', {
+    type: 'array',
+    default: []
+  })
+  .option('enable-word-time-offsets', {
     type: 'boolean',
     default: false
   })

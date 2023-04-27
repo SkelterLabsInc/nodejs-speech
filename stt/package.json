@@ -9,7 +9,6 @@
   ],
   "license": "Apache-2.0",
   "dependencies": {
-    "@google-cloud/speech": "^4.4.0",
     "@grpc/grpc-js": "^1.2.0",
     "av": "^0.4.9",
     "google-protobuf": "^3.19.4",
