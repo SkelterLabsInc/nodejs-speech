@@ -1,4 +1,4 @@
-# AIQ.TALK STT Node.js Example
+# AIQ.STT Node.js Example
 
 This repository contains simple example CLI programs that recognizes the given
 `resources/.wav` audio file.

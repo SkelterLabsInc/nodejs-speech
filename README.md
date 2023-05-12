@@ -1,6 +1,6 @@
-# AIQ.TALK Speech Node.js Example
+# AIQ.STT Node.js Example
 
-The AIQ.TALK Speech (STT/TTS) API examples for Node.js.
+The AIQ.STT API examples for Node.js.
 
 Tested on Node.js v14, v16, and v18.
 

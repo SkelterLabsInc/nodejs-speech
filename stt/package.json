@@ -1,7 +1,7 @@
 {
   "name": "aiq-stt-nodejs-examples",
   "version": "1.0.0",
-  "description": "AIQ.TALK Speech-to-Text NodeJS Examples",
+  "description": "AIQ.STT NodeJS Examples",
   "author": "Skelter Labs",
   "files": [
     "*.js",
