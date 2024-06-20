@@ -45,6 +45,8 @@ async function main(argv) {
     .setLanguageCode('ko-KR')
     .setSpeechContextsList(speechContext)
     .setEnableWordTimeOffsets(argv.enableWordTimeOffsets)
+    .setSpeechContextId("")
+    .setSubstitutionRuleId("")
 
   const streamingRecognitionConfig = new StreamingRecognitionConfig()
     .setConfig(recognitionConfig)
